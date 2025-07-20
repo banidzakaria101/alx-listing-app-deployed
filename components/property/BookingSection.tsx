@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { useRouter } from "next/router";
+import { PropertyProps } from "@/interfaces";
 
-const BookingSection: React.FC<{ price: number }> = ({ price }) => {
+const BookingSection: React.FC<{ property: PropertyProps }> = ({ property }) => {
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
+  const router = useRouter();
 
   // Calculate nights
   const getNights = () => {
@@ -14,12 +17,30 @@ const BookingSection: React.FC<{ price: number }> = ({ price }) => {
   };
 
   const nights = getNights();
-  const total = price * nights;
+  const total = property.price * nights;
   const isValid = nights > 0;
+
+  const handleReserve = () => {
+    if (!isValid) return;
+    router.push({
+      pathname: "/booking",
+      query: {
+        price: property.price,
+        checkIn,
+        checkOut,
+        nights,
+        total,
+        propertyName: property.name,
+        imageUrl: property.image,
+        reviews: property.reviews ? JSON.stringify(property.reviews) : undefined,
+        address: property.address?.city, // add more fields if needed
+      },
+    });
+  };
 
   return (
     <div className="bg-white p-6 shadow-md rounded-lg">
-      <h3 className="text-xl font-semibold">${price}/night</h3>
+      <h3 className="text-xl font-semibold">${property.price}/night</h3>
       <div className="mt-4">
         <label htmlFor="check-in">Check-in</label>
         <input
@@ -53,6 +74,7 @@ const BookingSection: React.FC<{ price: number }> = ({ price }) => {
       <button
         className="mt-4 bg-green-500 text-white py-2 px-4 rounded-md"
         disabled={!isValid}
+        onClick={handleReserve}
       >
         Reserve now
       </button>

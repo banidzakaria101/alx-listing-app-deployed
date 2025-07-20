@@ -1,26 +1,44 @@
+import { useRouter } from "next/router";
 import BookingForm from "@/components/booking/BookingForm";
-import OrderSummary from "@/components/booking/OrderSummary";
 import CancellationPolicy from "@/components/booking/CancellationPolicy";
+import OrderSummary from "@/components/booking/OrderSummary";
 
-export default function BookingPage() {
+const BookingPage = () => {
+  const router = useRouter();
+  const {
+    price,
+    checkIn,
+    checkOut,
+    nights,
+    total,
+    propertyName,
+    imageUrl,
+    reviews,
+    address,
+  } = router.query;
+
   const bookingDetails = {
-    propertyName: "Some Property",
-    price: 100,
+    propertyName: propertyName as string || "Selected Property",
+    imageUrl: imageUrl as string || "/assets/images/default.jpg",
+    reviews: Number(reviews) || 0,
+    address: address as string || "",
+    startDate: checkIn as string,
+    totalNights: Number(nights) || 0,
+    price: Number(price) || 0,
     bookingFee: 20,
-    totalNights: 2,
-    startDate: "2025-07-20",
-    reviews: 0, // <-- Add this line (set to a number)
   };
 
   return (
-    <div className="container mx-auto p-6">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div>
-          <BookingForm />
-          <CancellationPolicy />
-        </div>
+    <div className="container mx-auto p-6 grid lg:grid-cols-2 gap-8">
+      <div>
+        <BookingForm />
+        <CancellationPolicy />
+      </div>
+      <div>
         <OrderSummary bookingDetails={bookingDetails} />
       </div>
     </div>
   );
-}
+};
+
+export default BookingPage;

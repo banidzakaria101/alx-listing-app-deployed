@@ -49,8 +49,8 @@ const PropertyDetail: React.FC<{ property: PropertyProps }> = ({ property }) => 
       </div>
 
       {/* Right Column (Booking Sidebar) */}
-      <div>
-        <BookingSection price={property.price} />
+      <div className="lg:sticky lg:top-8 h-fit mt-28">
+        <BookingSection property={property} />
       </div>
     </div>
   );
